@@ -1,0 +1,10 @@
+pack CSV to Bin
+python C:\Users\admin\esp\v5.5.2\esp-idf\components\spiffs\spiffsgen.py 0x700000 C:\Users\admin\Desktop\data C:\Users\admin\Desktop\data\spiffs.bin
+
+flash to esp
+python -m esptool --chip esp32p4 --port COM16 --baud 921600 write_flash 0x810000 C:\Users\admin\Desktop\data\spiffs.bin
+
+>idf path should be matached in bin making command:  C:\Users\admin\esp\v5.5.2\esp-idf
+>where ever folder is pasted which have csv file that folder path should also match with both command paths
+>port should be same where device is connected
+

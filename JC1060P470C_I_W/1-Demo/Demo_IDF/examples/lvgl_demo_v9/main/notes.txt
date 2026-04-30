@@ -1,0 +1,249 @@
+  >>>>>>>>>>>>>>>>>>>some notes related to APIs<<<<<<<<<<<<<<<<<<<<<<<<< 
+  07/03/2026
+
+1) How to choose color of perticular bg,text, etc
+
+ lv_obj_set_style_<property>(object, <value>, <selector>);
+    bg= backgroud
+    text_color= text color
+    border_color = border color
+    Value: Created via lv_color_hex(0xRRGGBB).
+     selector tell where and when color appear
+
+to target specific zone/area
+LV_PART_MAIN	The body/background of the object (Default).
+LV_PART_INDICATOR	The "filled" part (e.g., the bar on a slider).
+LV_PART_KNOB	The handle you grab (e.g., on a slider or switch).
+LV_PART_ITEMS	Individual items (e.g., cells in a table or buttons in a list).
+lv_obj_set_style_bg_color(slider, lv_color_hex(0x333333), LV_PART_MAIN);
+
+// Set the "filled" bar to Blue
+lv_obj_set_style_bg_color(slider, lv_color_hex(0x0000FF), LV_PART_INDICATOR);
+
+// Set the handle (knob) to Red
+lv_obj_set_style_bg_color(slider, lv_color_hex(0xFF0000), LV_PART_KNOB);
+LV_STATE_DEFAULT: Normal look.
+
+LV_STATE_PRESSED: When being clicked/touched.
+
+LV_STATE_CHECKED: When toggled "on"
+/ Default state is Grey
+lv_obj_set_style_bg_color(btn, lv_color_hex(0x808080), LV_STATE_DEFAULT);
+
+// Changes to Green ONLY when pressed
+lv_obj_set_style_bg_color(btn, lv_color_hex(0x00FF00), LV_STATE_PRESSED);
+
+Pure Red	0xFF0000	lv_color_hex(0xFF0000)
+Pure Green	0x00FF00	lv_color_hex(0x00FF00)
+Pure Blue	0x0000FF	lv_color_hex(0x0000FF)
+White	0xFFFFFF	lv_color_hex(0xFFFFFF)
+Black	0x000000	lv_color_hex(0x000000)
+Yellow	0xFFFF00	lv_color_hex(0xFFFF00)
+Magenta	0xFF00FF	lv_color_hex(0xFF00FF)
+Cyan	0x00FFFF	lv_color_hex(0x00FFFF)
+How to Get a "Particular" Custom Color
+If you aren't a human calculator, the easiest way to find these codes is to use a Color Picker.
+
+Search "Color Picker" on Google (or use Photoshop/Figma).
+
+Pick your desired shade.
+
+Look for the HEX value (it usually looks like #1A2B3C).
+
+Remove the # and replace it with 0x.
+lv_palette_main(LV_PALETTE_RED)
+
+lv_palette_main(LV_PALETTE_BLUE)
+
+lv_palette_lighten(LV_PALETTE_GREY, 2)
+
+LV_OPA_COVER: opacity  percentage(element is completely visible. Conversely, an element with 0% opacity is entirely transparent, making it invisible)
+
+
+2)int32_t *x_ofs, int32_t *y_ofs) ofset
+
+When you align an object, you use lv_obj_align(obj, align, x_ofs, y_ofs).
+
+align: The reference point (e.g., LV_ALIGN_CENTER, LV_ALIGN_TOP_LEFT).
+
+x_ofs: Horizontal shift. Positive numbers move it Right, negative move it Left.
+
+y_ofs: Vertical shift. Positive numbers move it Down, negative move it Up.
+to set callback for clicking any object like buttons
+
+lv_obj_add_event_cb(back_btn, back_to_splash_cb, LV_EVENT_CLICKED, NULL);//when button clicked callback clicked
+ 
+ >lv_obj_set_style_radius: roundness of the corners of object
+
+ Value = 0: Perfectly sharp, square corners.
+
+Value = 10: Slightly rounded (standard modern UI look).
+
+Value = LV_RADIUS_CIRCLE: Automatically makes the corners as round as possible. If the object is a perfect square, 
+it becomes a circle. If it's a rectangle, it becomes a pill shape.
+
+
+04-04-2024
+
+1)changed array from managed_components\espressif__esp_lcd_jd9165\esp_lcd_jd9165.c
+
+// static const jd9165_lcd_init_cmd_t vendor_specific_init_default[] = {
+// //  {cmd, { data }, data_size, delay_ms}
+//     {0x11, (uint8_t []){0x00}, 1, 120},
+//     {0x29, (uint8_t []){0x00}, 1, 20},
+// };// changed as per display issue not lit on 04_04_2024
+
+static const jd9165_lcd_init_cmd_t vendor_specific_init_default[] = {
+    {0x30, (uint8_t[]){0x00}, 1, 0},
+    {0xF7, (uint8_t[]){0x49,0x61,0x02,0x00}, 4, 0},
+    {0x30, (uint8_t[]){0x01}, 1, 0},
+    {0x04, (uint8_t[]){0x0C}, 1, 0},
+    {0x05, (uint8_t[]){0x00}, 1, 0},
+    {0x06, (uint8_t[]){0x00}, 1, 0},
+    {0x0B, (uint8_t[]){0x11}, 1, 0},
+    {0x17, (uint8_t[]){0x00}, 1, 0},
+    {0x20, (uint8_t[]){0x04}, 1, 0},
+    {0x1F, (uint8_t[]){0x05}, 1, 0},
+    {0x23, (uint8_t[]){0x00}, 1, 0},
+    {0x25, (uint8_t[]){0x19}, 1, 0},
+    {0x28, (uint8_t[]){0x18}, 1, 0},
+    {0x29, (uint8_t[]){0x04}, 1, 0},
+    {0x2A, (uint8_t[]){0x01}, 1, 0},
+    {0x2B, (uint8_t[]){0x04}, 1, 0},
+    {0x2C, (uint8_t[]){0x01}, 1, 0},
+    {0x30, (uint8_t[]){0x02}, 1, 0},
+    {0x01, (uint8_t[]){0x22}, 1, 0},
+    {0x03, (uint8_t[]){0x12}, 1, 0},
+    {0x04, (uint8_t[]){0x00}, 1, 0},
+    {0x05, (uint8_t[]){0x64}, 1, 0},
+    {0x0A, (uint8_t[]){0x08}, 1, 0},
+    {0x0B, (uint8_t[]){0x0A,0x1A,0x0B,0x0D,0x0D,0x11,0x10,0x06,0x08,0x1F,0x1D}, 11, 0},
+    {0x0C, (uint8_t[]){0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D}, 11, 0},
+    {0x0D, (uint8_t[]){0x16,0x1B,0x0B,0x0D,0x0D,0x11,0x10,0x07,0x09,0x1E,0x1C}, 11, 0},
+    {0x0E, (uint8_t[]){0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D}, 11, 0},
+    {0x0F, (uint8_t[]){0x16,0x1B,0x0D,0x0B,0x0D,0x11,0x10,0x1C,0x1E,0x09,0x07}, 11, 0},
+    {0x10, (uint8_t[]){0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D}, 11, 0},
+    {0x11, (uint8_t[]){0x0A,0x1A,0x0D,0x0B,0x0D,0x11,0x10,0x1D,0x1F,0x08,0x06}, 11, 0},
+    {0x12, (uint8_t[]){0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D,0x0D}, 11, 0},
+    {0x14, (uint8_t[]){0x00,0x00,0x11,0x11}, 4, 0},
+    {0x18, (uint8_t[]){0x99}, 1, 0},
+    {0x30, (uint8_t[]){0x06}, 1, 0},
+    {0x12, (uint8_t[]){0x36,0x2C,0x2E,0x3C,0x38,0x35,0x35,0x32,0x2E,0x1D,0x2B,0x21,0x16,0x29}, 14, 0},
+    {0x13, (uint8_t[]){0x36,0x2C,0x2E,0x3C,0x38,0x35,0x35,0x32,0x2E,0x1D,0x2B,0x21,0x16,0x29}, 14, 0},
+    {0x30, (uint8_t[]){0x0A}, 1, 0},
+    {0x02, (uint8_t[]){0x4F}, 1, 0},
+    {0x0B, (uint8_t[]){0x40}, 1, 0},
+    {0x12, (uint8_t[]){0x3E}, 1, 0},
+    {0x13, (uint8_t[]){0x78}, 1, 0},
+    {0x30, (uint8_t[]){0x0D}, 1, 0},
+    {0x0D, (uint8_t[]){0x04}, 1, 0},
+    {0x10, (uint8_t[]){0x0C}, 1, 0},
+    {0x11, (uint8_t[]){0x0C}, 1, 0},
+    {0x12, (uint8_t[]){0x0C}, 1, 0},
+    {0x13, (uint8_t[]){0x0C}, 1, 0},
+    {0x30, (uint8_t[]){0x00}, 1, 0},
+    {0x11, (uint8_t[]){0x00}, 1, 120},
+    {0x29, (uint8_t[]){0x00}, 1, 50},
+};
+
+Why the New Array Works
+The massive new array you pasted from the GitHub repo is a Tuning Profile created specifically by the hardware engineers who manufactured your exact 7-inch glass panel.
+
+Instead of just hitting the power switch, that new array acts like an expert technician methodically setting every single dial in the control room before turning on the power:
+
+Power Control Registers: It sends commands to turn on internal step-up converters. To make an LCD pixel turn black or white, it physically needs around +5V and -5V to twist the liquid crystal. The chip has to generate this internally.
+
+Gamma Correction: Notice how the new array has long strings of numbers like {0x0B, (uint8_t[]){0x0A,0x1A...}? That is a Gamma Curve. Every batch of glass has slightly different chemistry. These hex codes tell the chip exactly how much micro-voltage to apply to make a pixel look "pure red" instead of "washed-out orange."
+
+Memory & Interface Mapping: It configures the MIPI data lanes, telling the chip to expect your exact 1024x600 resolution and your specific 16-bit or 24-bit color format.
+
+The Finale: At the very end of that massive new array, you will see it finally sends the 0x11 (Sleep Out) and 0x29 (Display On) commands.
+
+2) Replaced old see its already right i thing so #define JD9165_1024_600_PANEL_60HZ_DPI_CONFIG(px_format) \
+    {                                                    \
+        .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT,     \
+        .dpi_clock_freq_mhz = 50,                        \
+        .virtual_channel = 0,                            \
+        .pixel_format = px_format,                       \
+        .num_fbs = 1,                                    \
+        .video_timing = {                                \
+            .h_size = 1024,                              \
+            .v_size = 600,                               \
+            .hsync_back_porch = 136,                     \
+            .hsync_pulse_width = 20,                     \
+            .hsync_front_porch = 160,                    \
+            .vsync_back_porch = 12,                      \
+            .vsync_pulse_width = 2,                      \
+            .vsync_front_porch = 20,                     \
+        },                                               \
+        .flags.use_dma2d = true,                         \
+    }
+
+to 
+#define JD9165_1024_600_PANEL_60HZ_DPI_CONFIG(px_format) \
+    { \
+        .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT, \
+        .dpi_clock_freq_mhz = 51.2, \
+        .virtual_channel = 0, \
+        .pixel_format = px_format, \
+        .num_fbs = 1, \
+        .video_timing = { \
+            .h_size = 1024, \
+            .v_size = 600, \
+            .hsync_back_porch = 136, \
+            .hsync_pulse_width = 24, \
+            .hsync_front_porch = 160, \
+            .vsync_back_porch = 21, \
+            .vsync_pulse_width = 2, \
+            .vsync_front_porch = 12, \
+        }, \
+        .flags.use_dma2d = true, \
+    }// changedue to screen issue 
+#ifdef __cplusplus
+} in managed_components\espressif__esp_lcd_jd9165\include\esp_lcd_jd9165.h
+
+now things worked otherwise display is not get lit after cold boot
+
+3)
+default
+ **************************************************************************************************/
+#define BSP_LCD_PIXEL_CLOCK_MHZ     (80)
+
+#if (BSP_CONFIG_NO_GRAPHIC_LIB == 0)
+
+#define BSP_LCD_DRAW_BUFF_SIZE     (BSP_LCD_H_RES * 50) // Frame buffer size in pixels
+#define BSP_LCD_DRAW_BUFF_DOUBLE   (0)
+
+changed to 
+
+#define BSP_LCD_PIXEL_CLOCK_MHZ     (80)
+
+#if (BSP_CONFIG_NO_GRAPHIC_LIB == 0)
+
+//#define BSP_LCD_DRAW_BUFF_SIZE     (BSP_LCD_H_RES * 50) // Frame buffer size in pixels
+#define BSP_LCD_DRAW_BUFF_SIZE   (BSP_LCD_H_RES * BSP_LCD_V_RES / 2) // if using ps ram half screen, much smoother
+
+#define BSP_LCD_DRAW_BUFF_DOUBLE   (1)
+
+
+>>>>>RGBW code flow<<<
+
+USER TOUCH
+    │
+    ├─► Widget (small card)
+    │       │
+    │       ├─ ON/OFF button     ──► rgb_widget_cb()
+    │       ├─ Red/Green/Blue    ──► rgb_widget_cb()
+    │       ├─ Arc drag          ──► rgb_arc_cb()
+    │       └─ Color panel icon  ──► rgb_widget_cb() → opens big screen
+    │
+    └─► Big Screen (full panel)
+            │
+            ├─ Color Wheel touch  ──► color_circle_event_cb()
+            ├─ White Circle touch ──► white_circle_event_cb()
+            ├─ Any Slider move    ──► rgb_screen_slider_cb()
+            ├─ + Save Color btn   ──► color_picker_img_event_cb()
+            └─ Saved color click  ──► replica_click_cb()
+
+Every path above ends with ONE call:
+    └──────────────► sync_widget_ui(rgb)  ← THE SINGLE SYNC POINT
